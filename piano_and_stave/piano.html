@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HTML5 Piano</title>
+<style type="text/css">
+dl{position: relative; width: 100%;position: relative;font-size:0;}
+dd{width:30px;height:100px;background-color: #000;border:solid 1px #fff;box-shadow: 0px 3px 5px #000;display: inline-block;margin:0;padding:0;cursor: pointer;color:#c00;font-weight: bold;text-align: center;line-height: 100px;
+border-top:solid 3px #999;
+border-left:solid 3px #fff;
+border-right:solid 3px #666;
+border-bottom:solid 3px #333;
+font-size:12px;}
+dt{font-size:14px;}
+ul{padding:0; list-style-type: none;margin:0;position: relative;}
+li{height: 1px;width:100%;position:relative;margin:11px 0 0;background-color:#000;padding:0;list-style-type: none;}
+span{border-radius: 6px/4.5px;background-color:#000;width:12px;height:9px;display: block;position: absolute}
+</style>
+</head>
+<body>
+<dl>
+<dt>C3</dt>
+<dd>do</dd>
+<dd>re</dd>
+<dd>mi</dd>
+<dd>fa</dd>
+<dd>so</dd>
+<dd>la</dd>
+<dd>ci</dd>
+</dl>
+<div>
+<ul>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+</ul>
+</div>
+<script type="text/javascript">
+var audio={};
+var vcolor=3;
+var step=0;
+window.onkeydown=function(){
+	var key=window.event.keyCode;
+	if(key==38&vcolor<4){
+		vcolor++;
+	}
+	if(key==40&vcolor>2){
+		vcolor--;
+	}
+	var nums=[49,50,51,52,53,54,55];
+	var voice=["do","re","mi","fa","so","la","ci"];
+	for(var i in nums){
+		if(key==nums[i]){
+			audio=new Audio("c"+vcolor+voice[i]+".mp3");
+			audio.play();
+			var sym=document.createElement("span");
+			sym.style.top=50-(i*6)+"px";
+			sym.style.left=step+"px";
+			document.getElementsByTagName("ul")[0].appendChild(sym);
+			step+=12;
+		}
+	}
+	document.getElementsByTagName("dt")[0].innerHTML="C"+vcolor;
+}
+var keys=document.getElementsByTagName("dd");
+for(var i=0;i<keys.length;i++){
+	keys[i].onmousedown=function(){
+		audio=new Audio("c3"+event.target.innerHTML+".mp3");
+		event.target.style.backgroundColor="#333";
+		audio.play();
+		step++;
+	};
+	keys[i].onmouseup=function(){
+		//audio.pause();
+		event.target.style.backgroundColor="#000";
+	};
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+*{padding:0; margin:0}
+ul,li{list-style:none}
+body{background:#000}
+.piano-keyboard{width:950px; height:302px; margin:10px auto; padding:280px 25px 18px 25px; background:url(../images/PianoPrince_Project_bg.jpg);}
+.piano-keyboard li{float:left; cursor:pointer}
+.piano-keyboard li.white{float:left; width:44px; height:296px; background:#fff; border:2px solid #333;}
+.piano-keyboard li.black{width:34px; height:192px; background:#000; display:inline-block; position:relative; left:-14px; }
+.piano-keyboard li.left{margin-left:2px;}
+.piano-keyboard li.right{margin-left:-32px;}
+.piano-keyboard .white.on{border:#999 2px solid; background:#eee; -moz-box-shadow:2px 2px 5px #333; -webkit-box-shadow:2px 2px 5px #333; box-shadow:2px 2px 5px #333;}
+.piano-keyboard .black.on{background:#333;  -moz-box-shadow:2px 2px 5px #333; -webkit-box-shadow:2px 2px 5px #333; box-shadow:2px 2px 5px #333;}
+
+.pp{font-size:12px; text-align:center; line-height:50px; color:#666}

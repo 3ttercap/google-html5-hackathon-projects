@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Example</title>
+		
+		
+		<!-- 1. Add these JavaScript inclusions in the head of your page -->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/highcharts.js"></script>
+		
+		<!-- 1a) Optional: add a theme file -->
+		<!--
+			<script type="text/javascript" src="../js/themes/gray.js"></script>
+		-->
+		
+		<!-- 1b) Optional: the exporting module -->
+		<script type="text/javascript" src="../js/modules/exporting.js"></script>
+		
+                		
+		<!-- 2. Add the JavaScript to initialize the chart on document ready -->
+		<script type="text/javascript">
+			
+			var maxSecond = 100;
+			var data = [ {sec:1,cm:3},{sec:40,cm:3},{sec:45,cm:3},{sec:34,cm:5}]
+                        
+		        var timeline = new Array();	
+			var cmData;//评论数据  {sec:1,cm:2}
+			function init(sec,cmdata)
+			{
+			    maxSecond = sec;
+		            data = cmdata; 
+			    genTimeLine();
+			    genCmData();
+			    update();
+			}
+									
+			function genCmData()
+			{
+				console.log('start');
+				cmData = new Array();
+				for(var j = 0;j<=maxSecond;j++)
+				{
+					cmData.push(0)	
+				}
+				for(j=0;j<data.length;j++)
+				{
+					cmData[data[j].sec] = data[j].cm; 
+				}				
+				console.log(cmData);
+			}	
+			function genTimeLine()
+			{
+				for (var i = 0;i<= maxSecond;i++)
+				{
+					timeline.push(' ');
+				} 
+				
+			}
+  				
+			var chart;
+			function update() {
+					chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'container',
+						defaultSeriesType: 'column'
+					},
+					title: {
+						text: ''
+					},
+					subtitle: {
+						//text: 'Source: WorldClimate.com'
+					},
+					xAxis: {
+						categories:timeline
+						},
+
+					yAxis: {
+						min: 0,
+						title: {
+							text: ' '
+						}
+					},
+				legend: {
+					enabled:false,
+					layout: 'vertical',
+					backgroundColor: '#FFFFFF',
+					align: 'left',
+					verticalAlign: 'top',
+					x: 100,
+					y: 70,
+					floating: true,
+					shadow: true
+				},
+					tooltip: {
+						formatter: function() {
+							return ''+
+							      'sec:'+this.x +' '+ 'comment:'+this.y;
+						}
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.2,
+							borderWidth: 0
+						}
+					},
+				        series: [{
+						data:cmData 				
+					}]
+				});
+				
+				
+			};
+				
+		</script>
+		
+	</head>
+	<body>
+		
+		<!-- 3. Add the container -->
+		<div id="container" style="width: 300px; height: 200px; margin: 0 auto"></div>
+		
+				
+	</body>
+</html>

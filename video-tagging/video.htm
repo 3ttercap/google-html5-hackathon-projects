@@ -1,0 +1,198 @@
+﻿<!DOCTYPE>
+
+<html>
+<head>
+    <title>test</title>
+</head>
+<body>
+    
+    <div id="container" style="width: 600px; height: 40px;position:absolute;top:450px; left:8px;">
+    
+    </div>
+
+    <div id="video_parent">
+        <button style="position:absolute; left:20px; top:40px;  height:0px;" id="video_comment">评论该帧</button>
+        <div style=" padding:5px;width:590px;height:30px;position:absolute;left:8px;top:35px;background-color:Black; color:#fff;opacity:0.8; text-align:center">
+            在希望发表评论的帧处单击
+        </div>
+        <video id="tag_video" width="600" height="500" controls="controls" src="billyBrowsers.ogg"> 
+        </video>
+    </div>
+    <div style="display:none">
+        <canvas id="c2" width="75" height="75"></canvas>
+    </div>
+   
+
+    <script>
+        var tagVideoController = {
+            tagVideoObj: '',
+
+            cfg: {
+                currentTime: 0
+            },
+
+            setTime: function (t) {
+                this.tagVideoObj.currentTime = t;
+            },
+
+            getTime: function () {
+                return this.tagVideoObj.currentTime;
+            },
+
+            init: function () {
+                var _this = this;
+                this.tagVideoObj = document.getElementById('tag_video');
+                this.eventManger();
+                this.tagVideoObj.onload = function () {
+                    // _this.eventManger();
+                }
+            },
+
+            drawVideo: function () {
+                var c1 = document.getElementById("c1");
+                var ctx1 = c1.getContext("2d");
+                var c2 = document.getElementById("c2");
+                var ctx2 = c2.getContext("2d");
+
+                ctx1.drawImage(this.tagVideoObj, 0, 0, 75, 75);
+                var frame = ctx1.getImageData(0, 0, 75, 75);
+                var l = frame.data.length / 4;
+                for (var i = 0; i < l; i++) {
+                    var r = frame.data[i * 4 + 0];
+                    var g = frame.data[i * 4 + 1];
+                    var b = frame.data[i * 4 + 2];
+                    if (g > 100 && r > 100 && b < 43)
+                        frame.data[i * 4 + 3] = 0;
+                }
+                ctx2.putImageData(frame, 0, 0);
+
+            },
+
+
+            eventManger: function () {
+                var _this = this;
+
+                document.getElementById('video_comment').addEventListener('click', function () {
+                    _this.tagVideoObj.pause();
+                    var currentTime = _this.cfg.currentTime = _this.getTime();
+                    _this.drawVideo();
+                    _this.messageTpl({ left: '100px', top: (500 + 30) + 'px' });
+                    _this.tagVideoObj.play();
+
+                }, false);
+
+                this.tagVideoObj.addEventListener('mouseover', function () {
+
+                }, false);
+
+                this.tagVideoObj.addEventListener('click', function (e) {
+
+                    _this.tagVideoObj.pause();
+                    _this.cfg.currentTime = _this.getTime();
+
+                    var fixed = 20;
+                        barWidth = 465,
+                        scale = 0.75,
+                        left = (parseInt(barWidth * (_this.cfg.currentTime / _this.tagVideoObj.duration), 10) + fixed) + 'px';
+                    
+                    _this.messageTpl({ left: left, top: (500) + 'px' });
+
+                    try {
+                        _this.drawVideo();
+                    } catch (e) {
+
+                    } finally {
+                        if (_this.tagVideoObj.duration > _this.cfg.currentTime) {
+                            _this.tagVideoObj.play();
+                        }
+                    }
+
+
+                }, false);
+
+
+            },
+
+            messageTpl: function (o) {
+
+                if (document.getElementById('comment_list') == null) {
+
+                    var pool = document.createElement('div');
+
+                    pool.innerHTML = '<div style="-webkit-transition-property: all; -webkit-transition-duration: 0.5s;-webkit-transition-timing-function: ease-out;-webkit-transition-delay:initial;opacity:0.5;-webkit-transform: scale(0.75);width:600px; position:absolute;top:' + o.top + ';left:' + o.left + '" id="comment_list">\
+                            <div style="height:6px;width:600px;"><img src="http://a.xnimg.cn/imgpro/box/box_arrow.png" /></div>\
+                            <div style="background-color: #F3FAFF;-webkit-box-shadow: 0px 0px 8px black;">\
+                                <div style="float:left;margin:10px;">\
+                                    <canvas id="c1" width="75" height="75"></canvas>\
+                                </div>\
+                                <div style="float:left;margin:10px;">\
+                                    <div style="float:left"><textarea style="width:400px;height:50px;" id="comment_textarea"></textarea></div>\
+                                    <div style="float:left"><button id="comment_video" style="width:60px; height:50px;background-color: #005EAC;border-color: #B8D4E8 #104681 #104681 #B8D4E8; border-style: solid;border-width: 1px;color: #FFFFFF;cursor: pointer;font-size: 14px;font-weight: bold;">评论</button></div>\
+                                    <div style="clear:both"></div>\
+                                </div>\
+                                <div style="clear:both"></div>\
+                                <div id="comment_container">\
+                                    <div style="padding:10px;"><span>USER_00 say:</span><span>good</span></div>\
+                                    <div style="padding:10px;"><span>USER_00 say:</span><span>it works</span></div>\
+                                    <div style="padding:10px;"><span>USER_04 say:</span><span>it works~~~~good</span></div>\
+                                </div>\
+                            </div>\
+                        </div>';
+
+                    document.body.appendChild(pool);
+
+                    //评论接口
+                    document.getElementById('comment_video').addEventListener('click', function () {
+
+                        var buf = document.getElementById('comment_container'),
+                            buf_text = document.getElementById('comment_textarea'),
+                            id = "c_" + Math.random();
+
+                        buf.innerHTML = '<div id="' + id + '" style="padding:10px;-webkit-transition-duration: 0.5s;-webkit-transition-timing-function: ease-out;-webkit-transition-delay:initial;opacity:0.5;-webkit-transform: scale(0.75);"><span>User XXXX say:</span><span>' + buf_text.value + '</span></div>' + buf.innerHTML;
+                        var buf_3 = document.getElementById(id);
+                        buf_3.style['-webkit-transform'] = 'scale(1)';
+                        buf_3.style['opacity'] = '1';
+                        buf_text.value = '';
+                    });
+
+                    document.getElementById('comment_list').addEventListener('mouseout', function () {
+                        var buf = document.getElementById('comment_list');
+                        buf.style['opacity'] = '0';
+                        buf.style['-webkit-transform'] = 'scale(0.75)';
+
+                        window.gmouseout = setTimeout(function () {
+                            document.getElementById('comment_list').style.display = 'none';
+                        }, 1050);
+                    });
+
+                    document.getElementById('comment_list').addEventListener('mouseover', function () {
+                        clearTimeout(window.gmouseout);
+                        var buf = document.getElementById('comment_list');
+                        buf.style['-webkit-transition-property'] = 'all';
+                        buf.style['-webkit-transition-duration'] = '1s';
+                        buf.style['-webkit-transition-timing-function'] = 'ease-out';
+                        buf.style['-webkit-transition-delay'] = 'initial';
+                        buf.style['-webkit-transition-property'] = 'all';
+                        buf.style['opacity'] = '1';
+                        buf.style['-webkit-transform'] = 'scale(1)';
+                    });
+
+                } else {
+
+                    var buf = document.getElementById('comment_list');
+                    buf.style['opacity'] = '1';
+                    buf.style['-webkit-transform'] = 'scale(0.75)';
+                    document.getElementById('comment_list').style.left = o.left;
+                    document.getElementById('comment_list').style.top = o.top;
+                    document.getElementById('comment_list').style.display = '';
+                }
+
+            }
+        }
+
+
+   
+        tagVideoController.init();
+    </script>
+</body>
+</html>

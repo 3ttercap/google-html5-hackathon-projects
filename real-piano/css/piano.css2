@@ -1,0 +1,69 @@
+* {
+    margin:0;
+    padding:0;
+}
+
+ul,li {
+    list-style:none;
+}
+
+body {
+    background:#000;
+}
+
+.piano-keyboard {
+    width:958px;
+    height:302px;
+    background: url(../images/PianoPrince_Project_bg.jpg);
+    margin:10px auto;
+    padding:280px 19px 18px 23px;
+}
+
+.piano-key {
+    float:left;
+    cursor:pointer;
+    border-radius:0 0 3px 3px;
+}
+
+.piano-key.white {
+    width:54px;
+    height:296px;
+    background:#fff;
+    border:2px solid #333;
+}
+
+.piano-key.left {
+    margin-left: 2px;
+}
+
+.piano-keyboard :first-child {
+    margin-left: 0;
+}
+
+.piano-key.black {
+    width:34px;
+    height:192px;
+    background:#000;
+    display:inline-block;
+    position:relative;
+    left:-14px;
+}
+
+.piano-key.right {
+    margin-left:-32px;
+}
+
+.piano-key.white.on {
+    border:#999 2px solid;
+    background:#eee;
+    -moz-box-shadow:2px 2px 5px #333;
+    -webkit-box-shadow:2px 2px 5px #333;
+    box-shadow:2px 2px 5px #333;
+}
+
+.piano-key.black.on {
+    background:#333;
+    -moz-box-shadow:2px 2px 5px #333;
+    -webkit-box-shadow:2px 2px 5px #333;
+    box-shadow:2px 2px 5px #333;
+}
